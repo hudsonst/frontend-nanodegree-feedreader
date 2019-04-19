@@ -101,7 +101,8 @@ $(function () {
 
         it('is finished with at least one entry', function () {
             const feed = document.querySelector(".feed");
-            expect(feed.getElementsByClassName("entry")).toBeDefined();
+            const entryLen = feed.getElementsByClassName("entry").length;
+            expect(entryLen).toBeGreaterThan(0);
         });
     });
     /* TODO: Write a new test suite named "New Feed Selection" */
@@ -113,28 +114,26 @@ $(function () {
          */
 
 
-        //Create arrays of two feed contents before the test.
+        //Initalize variables before the test
         let feed = document.querySelector(".feed");
-        let feedA = [];
-        let feedB = [];
+        let feedA;
+        let feedB;
 
+        //Load the feed twice, store contents in variables
         beforeEach(function (done) {
             loadFeed(0, function () {
-                Array.from(feed.children).forEach(function (item) {
-                    feedA.push(item.innerText);
+                feedA = feed.innerHTML;
+                loadFeed(1, function () {
+                    feedB = feed.innerHTML;
+                    done();
                 });
-            });
-            loadFeed(1, function () {
-                Array.from(feed.children).forEach(function (item) {
-                    feedB.push(item.innerText);
-                });
-                done();
             });
         });
 
-        // Compare the first item in the feed arrays to see if they're the same
+
+        // Compare the feeds to see if they're the same
         it('changes with new feed', function () {
-            expect(feedA[0] == feedB[0]).not.toBe(true);
+            expect(feedA).not.toBe(feedB);
         });
 
     });
